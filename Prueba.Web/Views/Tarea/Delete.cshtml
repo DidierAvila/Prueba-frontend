@@ -1,0 +1,45 @@
+@model Prueba.Web.Models.Tarea
+
+@{
+    ViewData["Title"] = "Eliminar Tarea";
+}
+
+<h1>Eliminar Tarea</h1>
+
+<h3>¿Está seguro de que desea eliminar esta tarea?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsCompleted)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.IsCompleted)
+            {
+                <span class="badge bg-success">Completada</span>
+            }
+            else
+            {
+                <span class="badge bg-warning">Pendiente</span>
+            }
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input asp-for="Id" type="hidden" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
