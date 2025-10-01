@@ -9,12 +9,23 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 // Configure HttpClient for API calls
-builder.Services.AddHttpClient<ITareaApiService, TareaApiService>(client =>
+builder.Services.AddHttpClient<TareaApiService>(client =>
 {
-    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5149";
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7192";
+    Console.WriteLine($"Configurando HttpClient con BaseUrl: {apiBaseUrl}");
     client.BaseAddress = new Uri(apiBaseUrl);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
     client.Timeout = TimeSpan.FromSeconds(30);
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler();
+    if (builder.Environment.IsDevelopment())
+    {
+        // Skip SSL certificate validation in development
+        handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+    }
+    return handler;
 });
 
 // Register the API service

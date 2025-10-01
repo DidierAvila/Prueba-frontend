@@ -17,11 +17,21 @@ namespace Prueba.Web.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<TareaApiService> _logger;
         private const string ApiBaseUrl = "/api/Task";
+        private const string FallbackBaseUrl = "https://localhost:7192";
 
         public TareaApiService(HttpClient httpClient, ILogger<TareaApiService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
+            
+            // Verificar y configurar BaseAddress si no está establecido
+            if (_httpClient.BaseAddress == null)
+            {
+                _logger.LogWarning("HttpClient BaseAddress es null, configurando fallback: {FallbackUrl}", FallbackBaseUrl);
+                _httpClient.BaseAddress = new Uri(FallbackBaseUrl);
+            }
+            
+            _logger.LogInformation("TareaApiService inicializado con BaseAddress: {BaseUrl}", _httpClient.BaseAddress);
         }
 
         public async Task<IEnumerable<Tarea>> GetAllTareasAsync()

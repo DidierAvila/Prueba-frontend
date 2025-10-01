@@ -28,9 +28,14 @@ namespace Prueba.Web.Controllers
             // Test 1: Conexión directa con HttpClient básico
             try
             {
-                using var testClient = new HttpClient();
+                // Ignorar certificados SSL en desarrollo
+                var handler = new HttpClientHandler()
+                {
+                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+                };
+                using var testClient = new HttpClient(handler);
                 
-                var response = await testClient.GetAsync("http://localhost:5149/api/Task");
+                var response = await testClient.GetAsync("https://localhost:7192/api/Task");
                 var content = await response.Content.ReadAsStringAsync();
                 
                 diagnostico.Tests.Add(new
